@@ -91,6 +91,7 @@ export function ShortlistSheet({
                     variant="outline"
                     size="sm"
                     className="mt-3"
+                    nativeButton={false}
                     render={
                       <a
                         href={mapsUrl(restaurant.mapsQuery)}

@@ -160,6 +160,7 @@ function SpinRound({
             </Button>
             <Button
               type="button"
+              nativeButton={false}
               render={
                 <a href={mapsUrl(winner.mapsQuery)} target="_blank" rel="noreferrer" />
               }

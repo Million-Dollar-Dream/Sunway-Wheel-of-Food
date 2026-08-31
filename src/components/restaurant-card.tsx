@@ -98,7 +98,7 @@ export function RestaurantCard({
           <Button type="button" variant="ghost" size="sm" onClick={onOpen}>
             Details
           </Button>
-          <Button type="button" size="sm" render={<a href={mapsUrl(restaurant.mapsQuery)} target="_blank" rel="noreferrer" />}>
+          <Button type="button" size="sm" nativeButton={false} render={<a href={mapsUrl(restaurant.mapsQuery)} target="_blank" rel="noreferrer" />}>
             <MapPin data-icon="inline-start" />
             Maps
           </Button>

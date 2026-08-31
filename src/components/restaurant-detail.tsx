@@ -104,6 +104,7 @@ export function RestaurantDetail({
               </Button>
               <Button
                 type="button"
+                nativeButton={false}
                 render={
                   <a
                     href={mapsUrl(restaurant.mapsQuery)}
