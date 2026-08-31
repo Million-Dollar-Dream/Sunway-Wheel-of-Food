@@ -18,7 +18,7 @@ Open [http://localhost:43123](http://localhost:43123).
 - Filter Pyramid vs Geo vs PJS, plus pork-free and vegetarian-friendly
 - Tap a mood chip (under RM20, spicy, sit-down, with the team)
 - Bookmark places into a shortlist stored in this browser
-- Use **Can’t decide** to spin a restaurant from the current list
+- Use **Can’t decide** to spin a prize wheel of the restaurants in your current list
 - Open Google Maps for the chosen spot
 
 Hours and prices change. Confirm on Maps or the restaurant’s page before you walk over. “Pork-free” here means no pork on the menu — not always JAKIM-certified.

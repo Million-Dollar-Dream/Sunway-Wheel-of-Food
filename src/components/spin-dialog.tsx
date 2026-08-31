@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Bookmark, Dices, MapPin, RotateCw } from "lucide-react";
+import { useRef, useState } from "react";
+import { Bookmark, MapPin, RotateCw } from "lucide-react";
 
+import { FortuneWheel } from "@/components/fortune-wheel";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,32 +14,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { mapsUrl, type Restaurant } from "@/data/restaurants";
-import { pickRandom } from "@/lib/filter-restaurants";
+import { targetRotation } from "@/lib/fortune-wheel";
 
-function runSpin(
-  list: Restaurant[],
-  onTick: (restaurant: Restaurant) => void,
-  onDone: (restaurant: Restaurant) => void,
-) {
-  const picked = pickRandom(list);
-  if (!picked) return () => undefined;
-
-  let i = 0;
-  const tick = window.setInterval(() => {
-    onTick(list[i % list.length]);
-    i += 1;
-  }, 70);
-
-  const done = window.setTimeout(() => {
-    window.clearInterval(tick);
-    onDone(picked);
-  }, 1600);
-
-  return () => {
-    window.clearInterval(tick);
-    window.clearTimeout(done);
-  };
-}
+const SPIN_MS = 4500;
 
 function SpinRound({
   candidates,
@@ -54,60 +32,111 @@ function SpinRound({
   onClose: () => void;
 }) {
   const [list] = useState(candidates);
-  const [shown, setShown] = useState<Restaurant | null>(list[0] ?? null);
+  const [rotation, setRotation] = useState(0);
+  const [spinning, setSpinning] = useState(false);
   const [winner, setWinner] = useState<Restaurant | null>(null);
+  const rotationRef = useRef(0);
+  const pendingIndex = useRef(0);
+  const spinningRef = useRef(false);
+  const timeoutRef = useRef<number | null>(null);
   const empty = list.length === 0;
 
-  useEffect(() => {
-    if (list.length === 0) return undefined;
-    return runSpin(list, setShown, (restaurant) => {
-      setShown(restaurant);
-      setWinner(restaurant);
-    });
-  }, [list]);
-
-  function spinAgain() {
-    if (list.length === 0) return;
+  function spin() {
+    if (spinningRef.current || empty) return;
+    const index = Math.floor(Math.random() * list.length);
+    pendingIndex.current = index;
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const next = targetRotation(
+      index,
+      list.length,
+      rotationRef.current,
+      reduced ? 1 : 6,
+      Math.random(),
+    );
+    rotationRef.current = next;
     setWinner(null);
-    runSpin(list, setShown, (restaurant) => {
-      setShown(restaurant);
-      setWinner(restaurant);
-    });
+    if (reduced) {
+      setRotation(next);
+      setWinner(list[index] ?? null);
+      return;
+    }
+    spinningRef.current = true;
+    setSpinning(true);
+    setRotation(next);
+    if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+    timeoutRef.current = window.setTimeout(handleSpinEnd, SPIN_MS + 120);
+  }
+
+  function handleSpinEnd() {
+    if (!spinningRef.current) return;
+    spinningRef.current = false;
+    if (timeoutRef.current) {
+      window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setSpinning(false);
+    const restaurant = list[pendingIndex.current];
+    setWinner(restaurant ?? null);
   }
 
   return (
     <>
-      <div className="flex min-h-40 flex-col items-center justify-center rounded-2xl border border-dashed border-primary/30 bg-primary/5 px-4 py-8 text-center">
-        {empty ? (
-          <p className="text-muted-foreground">No restaurants in this filter set.</p>
-        ) : shown ? (
-          <>
-            <p className="text-xs font-medium tracking-widest text-primary uppercase">
-              {winner ? "Eat here" : "Spinning"}
-            </p>
-            <p
-              className="mt-2 font-heading text-3xl font-semibold tracking-tight"
-              style={{ color: shown.accent }}
-            >
-              {shown.name}
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {shown.cuisine} · {shown.areaLabel}
-            </p>
-            {winner ? (
-              <p className="mt-4 max-w-sm text-sm leading-relaxed text-foreground/80">
-                {winner.why}
+      {empty ? (
+        <p className="rounded-2xl border border-dashed border-border px-4 py-10 text-center text-muted-foreground">
+          No restaurants in this filter set. Loosen the filters, then spin.
+        </p>
+      ) : (
+        <div className="flex flex-col items-center gap-4 pt-2">
+          <FortuneWheel
+            slices={list.map((restaurant) => ({
+              id: restaurant.id,
+              label: restaurant.name,
+              accent: restaurant.accent,
+            }))}
+            rotation={rotation}
+            spinning={spinning}
+            durationMs={SPIN_MS}
+            onSpinEnd={handleSpinEnd}
+          />
+
+          <div
+            className="min-h-16 text-center"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {spinning ? (
+              <p className="text-sm font-medium tracking-widest text-primary uppercase">
+                Spinning…
               </p>
-            ) : null}
-          </>
-        ) : (
-          <Dices className="size-8 animate-pulse text-primary" />
-        )}
-      </div>
+            ) : winner ? (
+              <>
+                <p className="text-xs font-medium tracking-widest text-primary uppercase">
+                  Eat here
+                </p>
+                <p
+                  className="font-heading text-2xl font-semibold tracking-tight"
+                  style={{ color: winner.accent }}
+                >
+                  {winner.name}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {winner.cuisine} · {winner.areaLabel}
+                </p>
+              </>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Pointer at the top. Spin when you are ready.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {winner ? (
         <DialogFooter className="sm:flex-wrap sm:justify-between">
-          <Button type="button" variant="outline" onClick={spinAgain}>
+          <Button type="button" variant="outline" onClick={spin} disabled={spinning}>
             <RotateCw data-icon="inline-start" />
             Spin again
           </Button>
@@ -144,9 +173,13 @@ function SpinRound({
         </DialogFooter>
       ) : (
         <DialogFooter>
-          <Button type="button" disabled>
-            <Dices data-icon="inline-start" />
-            {empty ? "Nothing to spin" : "Spinning…"}
+          <Button
+            type="button"
+            className="h-10 w-full sm:w-auto sm:min-w-40"
+            onClick={spin}
+            disabled={spinning || empty}
+          >
+            {spinning ? "Spinning…" : "Spin the wheel"}
           </Button>
         </DialogFooter>
       )}
@@ -173,13 +206,13 @@ export function SpinDialog({
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="max-h-[min(92dvh,44rem)] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="font-heading text-2xl">Can&apos;t decide?</DialogTitle>
+          <DialogTitle className="font-heading text-2xl">Wheel of lunch</DialogTitle>
           <DialogDescription>
             {candidates.length === 0
               ? "Nothing matches these filters. Loosen them, then spin again."
-              : "We will pick one lunch from the list you are looking at."}
+              : `${candidates.length} spot${candidates.length === 1 ? "" : "s"} on the wheel — the list you are looking at right now.`}
           </DialogDescription>
         </DialogHeader>
         {open ? (
