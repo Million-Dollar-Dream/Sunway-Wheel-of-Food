@@ -27,6 +27,7 @@ export function FortuneWheel({
   durationMs,
   onSpinEnd,
   className,
+  children,
 }: {
   slices: WheelSlice[];
   rotation: number;
@@ -34,6 +35,7 @@ export function FortuneWheel({
   durationMs: number;
   onSpinEnd: () => void;
   className?: string;
+  children?: React.ReactNode;
 }) {
   const count = Math.max(slices.length, 1);
   const slice = sliceDegrees(count);
@@ -118,12 +120,10 @@ export function FortuneWheel({
               stroke="#c2410c"
               strokeWidth="2.2"
             />
-            <circle cx={CX} cy={CY} r="20" fill="#9a3412" />
-            <circle cx={CX} cy={CY} r="14" fill="#fde7c7" />
-            <circle cx={CX} cy={CY} r="5" fill="#c2410c" />
           </svg>
         </div>
       </div>
+      {children}
     </div>
   );
 }

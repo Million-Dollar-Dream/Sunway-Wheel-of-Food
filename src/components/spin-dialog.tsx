@@ -99,7 +99,16 @@ function SpinRound({
             spinning={spinning}
             durationMs={SPIN_MS}
             onSpinEnd={handleSpinEnd}
-          />
+          >
+            <button
+              type="button"
+              onClick={spin}
+              disabled={spinning || empty}
+              className="absolute top-1/2 left-1/2 z-30 flex size-[4.25rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-4 border-[#fde7c7] bg-primary font-heading text-sm font-bold tracking-[0.18em] text-primary-foreground shadow-md transition disabled:opacity-80"
+            >
+              {spinning ? "…" : "SPIN"}
+            </button>
+          </FortuneWheel>
 
           <div
             className="min-h-16 text-center"
@@ -178,6 +187,7 @@ function SpinRound({
             className="h-10 w-full sm:w-auto sm:min-w-40"
             onClick={spin}
             disabled={spinning || empty}
+            autoFocus
           >
             {spinning ? "Spinning…" : "Spin the wheel"}
           </Button>
