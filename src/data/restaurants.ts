@@ -21,6 +21,8 @@ export type Restaurant = {
   walkFromBrt: string;
   hours: string;
   mapsQuery: string;
+  lat: number;
+  lng: number;
   accent: string;
 };
 
@@ -62,6 +64,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "5 min from Sunway Lagoon BRT",
     hours: "10:00am–10:00pm",
     mapsQuery: "Madam Kwan's Sunway Pyramid",
+    lat: 3.07292,
+    lng: 101.60718,
     accent: "#c45c26",
   },
   {
@@ -83,6 +87,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "5 min from Sunway Lagoon BRT",
     hours: "Weekdays 10:30am–9:30pm",
     mapsQuery: "Din Tai Fung Sunway Pyramid",
+    lat: 3.07318,
+    lng: 101.60682,
     accent: "#9a3412",
   },
   {
@@ -104,6 +110,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "5 min from Sunway Lagoon BRT",
     hours: "10:30am–10:00pm",
     mapsQuery: "Ippudo Sunway Pyramid",
+    lat: 3.07322,
+    lng: 101.60695,
     accent: "#b45309",
   },
   {
@@ -125,6 +133,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "6 min from Sunway Lagoon BRT",
     hours: "10:00am–9:00pm",
     mapsQuery: "Sukiya Tokyo Bowls Sunway Pyramid",
+    lat: 3.07268,
+    lng: 101.60655,
     accent: "#c2410c",
   },
   {
@@ -146,6 +156,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "6 min from Sunway Lagoon BRT",
     hours: "10:00am–10:00pm",
     mapsQuery: "Stuff'd Sunway Pyramid",
+    lat: 3.07262,
+    lng: 101.60672,
     accent: "#4d7c0f",
   },
   {
@@ -167,6 +179,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "6 min from Sunway Lagoon BRT",
     hours: "10:00am–10:00pm",
     mapsQuery: "Nando's Sunway Pyramid",
+    lat: 3.07255,
+    lng: 101.60648,
     accent: "#b91c1c",
   },
   {
@@ -188,6 +202,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "5 min from Sunway Lagoon BRT",
     hours: "Lunch sets Mon–Fri 11:00am–5:00pm",
     mapsQuery: "Laem Charoen Thai Seafood Sunway Pyramid",
+    lat: 3.07305,
+    lng: 101.60735,
     accent: "#15803d",
   },
   {
@@ -209,6 +225,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "5 min from Sunway Lagoon BRT",
     hours: "10:00am–10:00pm",
     mapsQuery: "The Chicken Rice Shop Sunway Pyramid",
+    lat: 3.07288,
+    lng: 101.6067,
     accent: "#ca8a04",
   },
   {
@@ -230,6 +248,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "5 min from Sunway Lagoon BRT",
     hours: "10:00am–10:00pm",
     mapsQuery: "PappaRich Sunway Pyramid",
+    lat: 3.073,
+    lng: 101.60658,
     accent: "#92400e",
   },
   {
@@ -251,6 +271,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "5 min from Sunway Lagoon BRT",
     hours: "10:00am–10:00pm",
     mapsQuery: "OldTown White Coffee Sunway Pyramid",
+    lat: 3.07278,
+    lng: 101.60708,
     accent: "#7c2d12",
   },
   {
@@ -272,6 +294,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "5 min from Sunway Lagoon BRT",
     hours: "10:00am–9:30pm",
     mapsQuery: "Salad Atelier Sunway Pyramid",
+    lat: 3.07312,
+    lng: 101.60722,
     accent: "#3f6212",
   },
   {
@@ -293,6 +317,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "5 min from Sunway Lagoon BRT",
     hours: "10:00am–10:00pm",
     mapsQuery: "Texas Chicken Sunway Pyramid",
+    lat: 3.0727,
+    lng: 101.6074,
     accent: "#b45309",
   },
   {
@@ -314,6 +340,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "5 min from Sunway Lagoon BRT",
     hours: "10:00am–10:00pm",
     mapsQuery: "Sushi King Sunway Pyramid",
+    lat: 3.07308,
+    lng: 101.6064,
     accent: "#be123c",
   },
   {
@@ -335,6 +363,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "8 min from Sunway Lagoon BRT",
     hours: "Lunch through evening",
     mapsQuery: "Fat Cat Sunway Geo Avenue",
+    lat: 3.06525,
+    lng: 101.60835,
     accent: "#c2410c",
   },
   {
@@ -356,6 +386,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "8 min from Sunway Lagoon BRT",
     hours: "Lunch and dinner; busiest after 6pm",
     mapsQuery: "Donkas Lab Sunway Geo Avenue",
+    lat: 3.06495,
+    lng: 101.60885,
     accent: "#9f1239",
   },
   {
@@ -377,6 +409,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "8 min from Sunway Lagoon BRT",
     hours: "Lunch through dinner",
     mapsQuery: "Miss Fu in Chengdu Sunway Geo Avenue",
+    lat: 3.06478,
+    lng: 101.60905,
     accent: "#dc2626",
   },
   {
@@ -398,6 +432,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "8 min from Sunway Lagoon BRT",
     hours: "10:00am–10:00pm",
     mapsQuery: "Restoran Mohd Chan Sunway Geo",
+    lat: 3.06548,
+    lng: 101.60815,
     accent: "#b45309",
   },
   {
@@ -419,6 +455,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "8 min from Sunway Lagoon BRT",
     hours: "7:30am–4:00pm",
     mapsQuery: "Toast Maker Sunway Geo Avenue",
+    lat: 3.06458,
+    lng: 101.60848,
     accent: "#a16207",
   },
   {
@@ -440,6 +478,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "8 min from Sunway Lagoon BRT",
     hours: "Lunch through dinner",
     mapsQuery: "VeryThai Mookata Sunway Geo Avenue",
+    lat: 3.06508,
+    lng: 101.60922,
     accent: "#047857",
   },
   {
@@ -461,6 +501,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "8 min from Sunway Lagoon BRT",
     hours: "Lunch through dinner",
     mapsQuery: "Thai Bistro Sunway Geo Avenue",
+    lat: 3.06488,
+    lng: 101.60862,
     accent: "#15803d",
   },
   {
@@ -482,6 +524,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "8 min from Sunway Lagoon BRT",
     hours: "Cafe hours through evening",
     mapsQuery: "Giraffe Coffee Sunway Geo Avenue",
+    lat: 3.06532,
+    lng: 101.60892,
     accent: "#92400e",
   },
   {
@@ -503,6 +547,8 @@ export const restaurants: Restaurant[] = [
     walkFromBrt: "10–12 min walk, or a short Grab",
     hours: "Breakfast through mid-afternoon; go early",
     mapsQuery: "Restoran Sin Kee Bandar Sunway PJS 11",
+    lat: 3.07185,
+    lng: 101.59815,
     accent: "#b45309",
   },
 ];

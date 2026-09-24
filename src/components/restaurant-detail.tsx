@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { mapsUrl, type Restaurant } from "@/data/restaurants";
+import { formatDistance } from "@/lib/geo";
 
 export function RestaurantDetail({
   restaurant,
@@ -20,12 +21,14 @@ export function RestaurantDetail({
   onOpenChange,
   saved,
   onToggleSave,
+  distanceM,
 }: {
   restaurant: Restaurant | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   saved: boolean;
   onToggleSave: () => void;
+  distanceM?: number;
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -42,6 +45,7 @@ export function RestaurantDetail({
                 </DialogTitle>
                 <DialogDescription className="mt-1">
                   {restaurant.cuisine} · {restaurant.lot}
+                  {distanceM !== undefined ? ` · ${formatDistance(distanceM)} away` : ""}
                 </DialogDescription>
               </div>
             </DialogHeader>
@@ -66,8 +70,14 @@ export function RestaurantDetail({
               <div className="flex gap-2">
                 <MapPin className="mt-0.5 size-4 shrink-0 text-primary" />
                 <div>
-                  <dt className="text-xs text-muted-foreground">From the BRT</dt>
-                  <dd className="font-medium">{restaurant.walkFromBrt}</dd>
+                  <dt className="text-xs text-muted-foreground">
+                    {distanceM !== undefined ? "From you" : "From the BRT"}
+                  </dt>
+                  <dd className="font-medium">
+                    {distanceM !== undefined
+                      ? `${formatDistance(distanceM)} · ${restaurant.lat.toFixed(5)}, ${restaurant.lng.toFixed(5)}`
+                      : restaurant.walkFromBrt}
+                  </dd>
                 </div>
               </div>
               <div className="flex gap-2">

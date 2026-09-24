@@ -5,6 +5,7 @@ import { Bookmark, BookmarkCheck, MapPin, UtensilsCrossed } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mapsUrl, type Restaurant } from "@/data/restaurants";
+import { formatDistance } from "@/lib/geo";
 import { cn } from "@/lib/utils";
 
 function pricePips(tier: 1 | 2 | 3) {
@@ -21,11 +22,13 @@ export function RestaurantCard({
   saved,
   onToggleSave,
   onOpen,
+  distanceM,
 }: {
   restaurant: Restaurant;
   saved: boolean;
   onToggleSave: () => void;
   onOpen: () => void;
+  distanceM?: number;
 }) {
   return (
     <article
@@ -54,6 +57,7 @@ export function RestaurantCard({
               </h3>
               <p className="mt-0.5 text-sm text-muted-foreground">
                 {restaurant.cuisine} · {restaurant.areaLabel}
+                {distanceM !== undefined ? ` · ${formatDistance(distanceM)}` : ""}
               </p>
             </button>
             <Button

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Bookmark, Dices, Search, SlidersHorizontal, X } from "lucide-react";
 
+import { LocationPanel } from "@/components/location-panel";
 import { RestaurantCard } from "@/components/restaurant-card";
 import { RestaurantDetail } from "@/components/restaurant-detail";
 import { ShortlistSheet } from "@/components/shortlist-sheet";
@@ -20,9 +21,11 @@ import {
   type Restaurant,
 } from "@/data/restaurants";
 import { useShortlist } from "@/hooks/use-shortlist";
+import { useUserLocation } from "@/hooks/use-user-location";
 import {
   DEFAULT_FILTERS,
   filterRestaurants,
+  restaurantDistance,
   type Filters,
 } from "@/lib/filter-restaurants";
 import { cn } from "@/lib/utils";
@@ -61,10 +64,11 @@ export function LunchApp() {
   const [shortlistOpen, setShortlistOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const shortlist = useShortlist();
+  const location = useUserLocation();
 
   const filtered = useMemo(
-    () => filterRestaurants(restaurants, filters),
-    [filters],
+    () => filterRestaurants(restaurants, filters, location.origin),
+    [filters, location.origin],
   );
 
   const savedRestaurants = useMemo(
@@ -143,7 +147,7 @@ export function LunchApp() {
           </h1>
           <p className="mt-3 max-w-lg text-sm leading-relaxed text-foreground/75 sm:text-base">
             Pyramid, Geo, and a couple of PJS tables that still beat the food court.
-            Filter by mood, save a shortlist, or let the spinner pick so nobody has to.
+            Filter by walk distance, mood, or budget — or spin the wheel when nobody can decide.
           </p>
 
           {featured ? (
@@ -181,6 +185,21 @@ export function LunchApp() {
             ))}
           </div>
         </section>
+
+        <div className="mt-6">
+          <LocationPanel
+            origin={location.origin}
+            source={location.source}
+            gpsStatus={location.gpsStatus}
+            gpsError={location.gpsError}
+            radiusM={filters.maxDistanceM}
+            restaurants={restaurants}
+            matchCount={filtered.length}
+            onRequestGps={location.requestGps}
+            onPick={location.setPin}
+            onRadiusChange={(meters) => update("maxDistanceM", meters)}
+          />
+        </div>
 
         <section className="mt-6 flex flex-col gap-3">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -297,7 +316,12 @@ export function LunchApp() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    onClick={() => setFilters(DEFAULT_FILTERS)}
+                    onClick={() =>
+                      setFilters((current) => ({
+                        ...DEFAULT_FILTERS,
+                        maxDistanceM: current.maxDistanceM,
+                      }))
+                    }
                   >
                     <X data-icon="inline-start" />
                     Clear all filters
@@ -326,21 +350,30 @@ export function LunchApp() {
             <div className="flex flex-col items-center rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">
               <p className="font-heading text-xl font-semibold">Nothing fits that</p>
               <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-                Bandar Sunway is not that picky. Drop a filter or spin from the full
-                list.
+                {location.origin
+                  ? "Nothing sits inside that walking circle. Widen the slider, move the pin, or drop a filter."
+                  : "Bandar Sunway is not that picky. Drop a filter or spin from the full list."}
               </p>
               <div className="mt-4 flex gap-2">
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setFilters(DEFAULT_FILTERS)}
+                  onClick={() =>
+                    setFilters((current) => ({
+                      ...DEFAULT_FILTERS,
+                      maxDistanceM: current.maxDistanceM,
+                    }))
+                  }
                 >
                   Reset filters
                 </Button>
                 <Button
                   type="button"
                   onClick={() => {
-                    setFilters(DEFAULT_FILTERS);
+                    setFilters((current) => ({
+                      ...DEFAULT_FILTERS,
+                      maxDistanceM: current.maxDistanceM,
+                    }));
                     openSpin("filtered");
                   }}
                 >
@@ -357,6 +390,11 @@ export function LunchApp() {
                   saved={shortlist.has(restaurant.id)}
                   onToggleSave={() => shortlist.toggle(restaurant.id)}
                   onOpen={() => setDetail(restaurant)}
+                  distanceM={
+                    location.origin
+                      ? restaurantDistance(restaurant, location.origin)
+                      : undefined
+                  }
                 />
               ))}
             </div>
@@ -390,6 +428,11 @@ export function LunchApp() {
         onToggleSave={() => {
           if (detail) shortlist.toggle(detail.id);
         }}
+        distanceM={
+          detail && location.origin
+            ? restaurantDistance(detail, location.origin)
+            : undefined
+        }
       />
 
       <SpinDialog

@@ -132,4 +132,8 @@
   html {
     @apply font-sans;
   }
+  .leaflet-container {
+    font-family: inherit;
+    background: oklch(0.95 0.02 85);
+  }
 }
