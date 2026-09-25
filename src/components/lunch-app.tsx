@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Bookmark, Dices, Search, SlidersHorizontal, X } from "lucide-react";
 
+import { FeedbackDialog } from "@/components/feedback-dialog";
 import { LocationPanel } from "@/components/location-panel";
 import { RestaurantCard } from "@/components/restaurant-card";
 import { RestaurantDetail } from "@/components/restaurant-detail";
@@ -391,8 +392,13 @@ export function LunchApp() {
       </main>
 
       <footer className="border-t border-border/80 px-4 py-6 text-center text-xs text-muted-foreground sm:px-6">
-        Hours and prices shift. Confirm on the restaurant&apos;s page or Maps before you
-        walk over. Pork-free here means no pork on the menu — not always JAKIM-certified.
+        <p>
+          Hours and prices shift. Confirm on the restaurant&apos;s page or Maps before you
+          walk over. Pork-free here means no pork on the menu — not always JAKIM-certified.
+        </p>
+        <div className="mt-2">
+          <FeedbackDialog />
+        </div>
       </footer>
 
       <div className="sticky bottom-0 z-20 border-t border-border/80 bg-card/95 p-3 backdrop-blur-md sm:hidden">
