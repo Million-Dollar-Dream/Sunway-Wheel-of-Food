@@ -60,6 +60,7 @@ export function LocationPanel({
   const pinsRef = useRef<HTMLDivElement>(null);
   const outsideCoverage =
     origin !== null &&
+    restaurants.length > 0 &&
     restaurants.every(
       (restaurant) =>
         haversineMeters(origin, { lat: restaurant.lat, lng: restaurant.lng }) >
