@@ -1,11 +1,12 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { Crosshair, LoaderCircle, MapPin } from "lucide-react";
+import { ChevronDown, Crosshair, LoaderCircle, MapPin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { type Restaurant } from "@/data/restaurants";
+import { AREA_PINS, type Restaurant } from "@/data/restaurants";
 import { type GpsStatus, type LocationSource } from "@/hooks/use-user-location";
 import {
   DEFAULT_RADIUS_M,
@@ -14,6 +15,8 @@ import {
   RADIUS_STEP_M,
   SUNWAY_CENTER,
   formatRadius,
+  haversineMeters,
+  radiusCovering,
   type Coordinates,
 } from "@/lib/geo";
 
@@ -53,6 +56,44 @@ export function LocationPanel({
   onRadiusChange: (meters: number) => void;
 }) {
   const locating = gpsStatus === "pending";
+  const [pinsOpen, setPinsOpen] = useState(false);
+  const pinsRef = useRef<HTMLDivElement>(null);
+  const outsideCoverage =
+    origin !== null &&
+    restaurants.every(
+      (restaurant) =>
+        haversineMeters(origin, { lat: restaurant.lat, lng: restaurant.lng }) >
+        MAX_RADIUS_M,
+    );
+
+  useEffect(() => {
+    if (!pinsOpen) return;
+    function onPointerDown(event: PointerEvent) {
+      if (!pinsRef.current?.contains(event.target as Node)) setPinsOpen(false);
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setPinsOpen(false);
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [pinsOpen]);
+
+  function centerOnCoverage() {
+    onPick(SUNWAY_CENTER);
+    onRadiusChange(
+      radiusCovering(
+        SUNWAY_CENTER,
+        restaurants.map((restaurant) => ({
+          lat: restaurant.lat,
+          lng: restaurant.lng,
+        })),
+      ),
+    );
+  }
 
   return (
     <section className="rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
@@ -78,12 +119,56 @@ export function LocationPanel({
             )}
             {locating ? "Finding you…" : "Use my location"}
           </Button>
-          <Button type="button" variant="secondary" onClick={() => onPick(SUNWAY_CENTER)}>
-            <MapPin data-icon="inline-start" />
-            Pin Sunway Lagoon
-          </Button>
+          <div className="relative" ref={pinsRef}>
+            <Button
+              type="button"
+              variant="secondary"
+              aria-expanded={pinsOpen}
+              aria-haspopup="listbox"
+              onClick={() => setPinsOpen((open) => !open)}
+            >
+              <MapPin data-icon="inline-start" />
+              Pin a Sunway spot
+              <ChevronDown data-icon="inline-end" />
+            </Button>
+            {pinsOpen ? (
+              <ul
+                role="listbox"
+                aria-label="Pin a Sunway spot"
+                className="absolute right-0 z-30 mt-1 min-w-48 rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-md"
+              >
+                {AREA_PINS.map((pin) => (
+                  <li key={pin.id}>
+                    <button
+                      type="button"
+                      role="option"
+                      className="w-full rounded-md px-2.5 py-1.5 text-left text-sm hover:bg-muted"
+                      onClick={() => {
+                        onPick({ lat: pin.lat, lng: pin.lng });
+                        setPinsOpen(false);
+                      }}
+                    >
+                      {pin.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
         </div>
       </div>
+
+      {outsideCoverage ? (
+        <div className="mt-3 flex flex-col gap-2 rounded-lg bg-primary/10 px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm">
+            You are outside Pyramid, Geo, and PJS. Center the map on that area to see lunch spots.
+          </p>
+          <Button type="button" size="sm" onClick={centerOnCoverage}>
+            <MapPin data-icon="inline-start" />
+            Center on Sunway
+          </Button>
+        </div>
+      ) : null}
 
       {gpsError ? (
         <p className="mt-3 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">

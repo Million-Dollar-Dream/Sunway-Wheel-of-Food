@@ -4,7 +4,7 @@ import { Bookmark, BookmarkCheck, MapPin, UtensilsCrossed } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { mapsUrl, type Restaurant } from "@/data/restaurants";
+import { formatCuisines, mapsUrl, type Restaurant } from "@/data/restaurants";
 import { formatDistance } from "@/lib/geo";
 import { cn } from "@/lib/utils";
 
@@ -56,7 +56,7 @@ export function RestaurantCard({
                 {restaurant.name}
               </h3>
               <p className="mt-0.5 text-sm text-muted-foreground">
-                {restaurant.cuisine} · {restaurant.areaLabel}
+                {formatCuisines(restaurant.cuisines)} · {restaurant.areaLabel}
                 {distanceM !== undefined ? ` · ${formatDistance(distanceM)}` : ""}
               </p>
             </button>

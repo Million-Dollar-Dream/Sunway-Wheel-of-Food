@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { mapsUrl, type Restaurant } from "@/data/restaurants";
+import { formatCuisines, mapsUrl, type Restaurant } from "@/data/restaurants";
 import { formatDistance } from "@/lib/geo";
 
 export function RestaurantDetail({
@@ -44,7 +44,7 @@ export function RestaurantDetail({
                   {restaurant.name}
                 </DialogTitle>
                 <DialogDescription className="mt-1">
-                  {restaurant.cuisine} · {restaurant.lot}
+                  {formatCuisines(restaurant.cuisines)} · {restaurant.lot}
                   {distanceM !== undefined ? ` · ${formatDistance(distanceM)} away` : ""}
                 </DialogDescription>
               </div>

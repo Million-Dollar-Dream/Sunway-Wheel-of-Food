@@ -1,14 +1,9 @@
-import {
-  type MoodId,
-  type Restaurant,
-  type Area,
-} from "@/data/restaurants";
+import { type MoodId, type Restaurant } from "@/data/restaurants";
 import { DEFAULT_RADIUS_M, haversineMeters, type Coordinates } from "@/lib/geo";
 
 export type Filters = {
   query: string;
-  area: Area | "all";
-  cuisine: string | "all";
+  cuisine: string[];
   budget: 0 | 1 | 2 | 3;
   porkFree: boolean;
   vegetarian: boolean;
@@ -18,8 +13,7 @@ export type Filters = {
 
 export const DEFAULT_FILTERS: Filters = {
   query: "",
-  area: "all",
-  cuisine: "all",
+  cuisine: [],
   budget: 0,
   porkFree: false,
   vegetarian: false,
@@ -40,7 +34,7 @@ export function matchesMood(restaurant: Restaurant, mood: MoodId) {
     case "sit-down":
       return restaurant.pace === "sit-down";
     case "cafe":
-      return restaurant.cuisine === "Cafe";
+      return restaurant.cuisines.includes("Cafe");
     case "group":
       return restaurant.goodForGroups;
   }
@@ -58,8 +52,10 @@ export function filterRestaurants(
   const q = filters.query.trim().toLowerCase();
 
   const matches = list.filter((restaurant) => {
-    if (filters.area !== "all" && restaurant.area !== filters.area) return false;
-    if (filters.cuisine !== "all" && restaurant.cuisine !== filters.cuisine) {
+    if (
+      filters.cuisine.length > 0 &&
+      !filters.cuisine.some((cuisine) => restaurant.cuisines.includes(cuisine))
+    ) {
       return false;
     }
     if (filters.budget !== 0 && restaurant.priceTier > filters.budget) {
@@ -75,7 +71,7 @@ export function filterRestaurants(
     if (q) {
       const haystack = [
         restaurant.name,
-        restaurant.cuisine,
+        restaurant.cuisines.join(" "),
         restaurant.areaLabel,
         restaurant.signature,
         restaurant.why,

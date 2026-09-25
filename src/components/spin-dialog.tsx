@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { mapsUrl, type Restaurant } from "@/data/restaurants";
+import { formatCuisines, mapsUrl, type Restaurant } from "@/data/restaurants";
 import { targetRotation } from "@/lib/fortune-wheel";
 
 const SPIN_MS = 4500;
@@ -131,7 +131,7 @@ function SpinRound({
                   {winner.name}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {winner.cuisine} · {winner.areaLabel}
+                  {formatCuisines(winner.cuisines)} · {winner.areaLabel}
                 </p>
               </>
             ) : (

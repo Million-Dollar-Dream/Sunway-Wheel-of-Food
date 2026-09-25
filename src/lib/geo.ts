@@ -33,6 +33,13 @@ export function formatDistance(meters: number) {
   return `${km < 2 ? km.toFixed(1) : km.toFixed(1)} km`;
 }
 
+export function radiusCovering(origin: Coordinates, points: Coordinates[]) {
+  if (points.length === 0) return DEFAULT_RADIUS_M;
+  const farthest = Math.max(...points.map((point) => haversineMeters(origin, point)));
+  const stepped = Math.ceil(farthest / RADIUS_STEP_M) * RADIUS_STEP_M;
+  return Math.min(MAX_RADIUS_M, Math.max(MIN_RADIUS_M, stepped));
+}
+
 export function formatRadius(meters: number) {
   if (meters < 1000) return `${meters} m`;
   const km = meters / 1000;

@@ -12,7 +12,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { mapsUrl, type Restaurant } from "@/data/restaurants";
+import { formatCuisines, mapsUrl, type Restaurant } from "@/data/restaurants";
 
 export function ShortlistSheet({
   open,
@@ -72,7 +72,7 @@ export function ShortlistSheet({
                         {restaurant.name}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {restaurant.cuisine} · {restaurant.priceNote}
+                        {formatCuisines(restaurant.cuisines)} · {restaurant.priceNote}
                       </p>
                     </button>
                     <Button

@@ -5,7 +5,7 @@ export type PriceTier = 1 | 2 | 3;
 export type Restaurant = {
   id: string;
   name: string;
-  cuisine: string;
+  cuisines: string[];
   area: Area;
   areaLabel: string;
   lot: string;
@@ -26,11 +26,15 @@ export type Restaurant = {
   accent: string;
 };
 
-export const AREAS: { id: Area | "all"; label: string }[] = [
-  { id: "all", label: "Anywhere" },
-  { id: "pyramid", label: "Sunway Pyramid" },
-  { id: "geo", label: "Sunway Geo" },
-  { id: "pjs", label: "PJS streets" },
+export const AREA_PINS: {
+  id: Area;
+  label: string;
+  lat: number;
+  lng: number;
+}[] = [
+  { id: "pyramid", label: "Sunway Pyramid", lat: 3.0729, lng: 101.6069 },
+  { id: "geo", label: "Sunway Geo Avenue", lat: 3.06505, lng: 101.6087 },
+  { id: "pjs", label: "PJS", lat: 3.07185, lng: 101.59815 },
 ];
 
 export const CUISINES = [
@@ -48,7 +52,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "madam-kwans",
     name: "Madam Kwan's",
-    cuisine: "Malaysian",
+    cuisines: ["Malaysian"],
     area: "pyramid",
     areaLabel: "Sunway Pyramid",
     lot: "LG1, Lot 1.47",
@@ -71,7 +75,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "din-tai-fung",
     name: "Din Tai Fung",
-    cuisine: "Chinese",
+    cuisines: ["Chinese"],
     area: "pyramid",
     areaLabel: "Sunway Pyramid",
     lot: "Ground Floor, G1.41",
@@ -94,7 +98,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "ippudo",
     name: "Ippudo",
-    cuisine: "Japanese",
+    cuisines: ["Japanese"],
     area: "pyramid",
     areaLabel: "Sunway Pyramid",
     lot: "Ground Floor, G1.45",
@@ -117,7 +121,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "sukiya",
     name: "Sukiya Tokyo Bowls",
-    cuisine: "Japanese",
+    cuisines: ["Japanese"],
     area: "pyramid",
     areaLabel: "Sunway Pyramid",
     lot: "LG2, Lot LG2-30",
@@ -140,7 +144,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "stuffd",
     name: "Stuff'd",
-    cuisine: "Bowls",
+    cuisines: ["Bowls"],
     area: "pyramid",
     areaLabel: "Sunway Pyramid",
     lot: "LG2, Lot LG2.53A",
@@ -163,7 +167,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "nandos",
     name: "Nando's",
-    cuisine: "Western",
+    cuisines: ["Western"],
     area: "pyramid",
     areaLabel: "Sunway Pyramid",
     lot: "Lower Level 2, L2.56",
@@ -186,7 +190,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "laem-charoen",
     name: "Laem Charoen Thai Seafood",
-    cuisine: "Thai",
+    cuisines: ["Thai"],
     area: "pyramid",
     areaLabel: "Sunway Pyramid",
     lot: "Sunway Pyramid",
@@ -209,7 +213,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "chicken-rice-shop",
     name: "The Chicken Rice Shop",
-    cuisine: "Malaysian",
+    cuisines: ["Malaysian", "Chinese"],
     area: "pyramid",
     areaLabel: "Sunway Pyramid",
     lot: "Sunway Pyramid",
@@ -232,7 +236,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "papparich",
     name: "PappaRich",
-    cuisine: "Malaysian",
+    cuisines: ["Malaysian", "Cafe"],
     area: "pyramid",
     areaLabel: "Sunway Pyramid",
     lot: "Sunway Pyramid",
@@ -255,7 +259,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "old-town",
     name: "OldTown White Coffee",
-    cuisine: "Malaysian",
+    cuisines: ["Malaysian", "Cafe"],
     area: "pyramid",
     areaLabel: "Sunway Pyramid",
     lot: "Sunway Pyramid",
@@ -278,7 +282,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "salad-atelier",
     name: "Salad Atelier",
-    cuisine: "Bowls",
+    cuisines: ["Bowls"],
     area: "pyramid",
     areaLabel: "Sunway Pyramid",
     lot: "Sunway Pyramid",
@@ -301,7 +305,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "texas-chicken",
     name: "Texas Chicken",
-    cuisine: "Western",
+    cuisines: ["Western"],
     area: "pyramid",
     areaLabel: "Sunway Pyramid",
     lot: "Sunway Pyramid",
@@ -324,7 +328,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "sushi-king",
     name: "Sushi King",
-    cuisine: "Japanese",
+    cuisines: ["Japanese"],
     area: "pyramid",
     areaLabel: "Sunway Pyramid",
     lot: "Sunway Pyramid",
@@ -347,7 +351,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "fat-cat",
     name: "Fat Cat",
-    cuisine: "Cafe",
+    cuisines: ["Cafe", "Japanese", "Bowls"],
     area: "geo",
     areaLabel: "Sunway Geo Avenue",
     lot: "Block D, D-01-01-001A",
@@ -370,7 +374,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "donkas-lab",
     name: "Donkas Lab",
-    cuisine: "Korean",
+    cuisines: ["Korean"],
     area: "geo",
     areaLabel: "Sunway Geo Avenue",
     lot: "Sunway Geo Avenue",
@@ -393,7 +397,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "miss-fu",
     name: "Miss Fu in Chengdu",
-    cuisine: "Chinese",
+    cuisines: ["Chinese"],
     area: "geo",
     areaLabel: "Sunway Geo Avenue",
     lot: "Sunway Geo Avenue",
@@ -416,7 +420,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "mohd-chan",
     name: "Restoran Mohd Chan",
-    cuisine: "Chinese",
+    cuisines: ["Chinese"],
     area: "geo",
     areaLabel: "Sunway Geo Avenue",
     lot: "A-01-01, Sunway Geo Avenue",
@@ -439,7 +443,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "toast-maker",
     name: "Toast Maker",
-    cuisine: "Cafe",
+    cuisines: ["Cafe", "Western"],
     area: "geo",
     areaLabel: "Sunway Geo Avenue",
     lot: "K1-01, Sunway Geo Avenue",
@@ -462,7 +466,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "verythai",
     name: "VeryThai Mookata",
-    cuisine: "Thai",
+    cuisines: ["Thai"],
     area: "geo",
     areaLabel: "Sunway Geo Avenue",
     lot: "Level 1, Sunway Geo Avenue",
@@ -485,7 +489,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "thai-bistro",
     name: "Thai Bistro",
-    cuisine: "Thai",
+    cuisines: ["Thai"],
     area: "geo",
     areaLabel: "Sunway Geo Avenue",
     lot: "Sunway Geo Avenue",
@@ -508,7 +512,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "giraffe-coffee",
     name: "Giraffe Coffee",
-    cuisine: "Cafe",
+    cuisines: ["Cafe"],
     area: "geo",
     areaLabel: "Sunway Geo Avenue",
     lot: "Sunway Geo Avenue",
@@ -531,7 +535,7 @@ export const restaurants: Restaurant[] = [
   {
     id: "sin-kee",
     name: "Restoran Sin Kee",
-    cuisine: "Chinese",
+    cuisines: ["Chinese"],
     area: "pjs",
     areaLabel: "PJS 11",
     lot: "Jalan PJS 11/7, Bandar Sunway",
@@ -575,6 +579,10 @@ export const MOODS: {
   { id: "cafe", label: "Cafe-ish", hint: "Coffee with the meal" },
   { id: "group", label: "With the team", hint: "Easy to share" },
 ];
+
+export function formatCuisines(cuisines: readonly string[]) {
+  return cuisines.join(" · ");
+}
 
 export function mapsUrl(query: string) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;

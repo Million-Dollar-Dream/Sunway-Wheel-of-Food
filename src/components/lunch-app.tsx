@@ -12,7 +12,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  AREAS,
   CUISINES,
   MOODS,
   daySeedFromDate,
@@ -83,8 +82,7 @@ export function LunchApp() {
 
   const featured = todaysPick(restaurants, daySeedFromDate());
   const activeFilterCount = [
-    filters.area !== "all",
-    filters.cuisine !== "all",
+    filters.cuisine.length > 0,
     filters.budget !== 0,
     filters.porkFree,
     filters.vegetarian,
@@ -227,18 +225,6 @@ export function LunchApp() {
             </Button>
           </div>
 
-          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
-            {AREAS.map((area) => (
-              <Chip
-                key={area.id}
-                active={filters.area === area.id}
-                onClick={() => update("area", area.id)}
-              >
-                {area.label}
-              </Chip>
-            ))}
-          </div>
-
           {showFilters ? (
             <div className="grid gap-4 rounded-2xl border border-border/80 bg-card p-4 sm:grid-cols-3">
               <fieldset>
@@ -247,19 +233,21 @@ export function LunchApp() {
                 </legend>
                 <div className="flex flex-wrap gap-1.5">
                   <Chip
-                    active={filters.cuisine === "all"}
-                    onClick={() => update("cuisine", "all")}
+                    active={filters.cuisine.length === 0}
+                    onClick={() => update("cuisine", [])}
                   >
                     All
                   </Chip>
                   {CUISINES.map((cuisine) => (
                     <Chip
                       key={cuisine}
-                      active={filters.cuisine === cuisine}
+                      active={filters.cuisine.includes(cuisine)}
                       onClick={() =>
                         update(
                           "cuisine",
-                          filters.cuisine === cuisine ? "all" : cuisine,
+                          filters.cuisine.includes(cuisine)
+                            ? filters.cuisine.filter((item) => item !== cuisine)
+                            : [...filters.cuisine, cuisine],
                         )
                       }
                     >
