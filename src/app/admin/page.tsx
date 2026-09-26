@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
-import { login, logout } from "@/app/admin/actions";
+import { login } from "@/app/admin/actions";
+import { AdminFrame } from "@/components/admin-frame";
 import { ADMIN_COOKIE, readAdminSession } from "@/lib/admin-auth";
 import { getSql } from "@/lib/db";
 import { restaurants } from "@/data/restaurants";
@@ -52,7 +53,7 @@ export default async function AdminPage({
   if (!signedIn) {
     return (
       <main className="mx-auto flex min-h-full w-full max-w-sm flex-col justify-center px-4 py-16">
-        <h1 className="font-serif text-2xl">Notes</h1>
+        <h1 className="font-heading text-2xl font-semibold">Admin</h1>
         <form action={login} className="mt-6 flex flex-col gap-3">
           <label className="text-sm" htmlFor="password">
             Password
@@ -99,18 +100,8 @@ export default async function AdminPage({
   }
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-10">
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="font-serif text-2xl">Notes</h1>
-        <form action={logout}>
-          <button
-            type="submit"
-            className="rounded-md border border-black/15 px-3 py-2 text-sm"
-          >
-            Log out
-          </button>
-        </form>
-      </div>
+    <AdminFrame current="notes">
+      <h1 className="mt-8 font-heading text-3xl font-semibold tracking-tight">Notes</h1>
       {unavailable ? (
         <p className="mt-6 text-sm">Feedback is not available right now.</p>
       ) : rows.length === 0 ? (
@@ -141,6 +132,6 @@ export default async function AdminPage({
           </table>
         </div>
       )}
-    </main>
+    </AdminFrame>
   );
 }

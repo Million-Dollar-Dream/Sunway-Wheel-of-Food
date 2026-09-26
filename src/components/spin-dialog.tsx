@@ -24,12 +24,14 @@ function SpinRound({
   onToggleSave,
   onOpenRestaurant,
   onClose,
+  onRecordSpin,
 }: {
   candidates: Restaurant[];
   saved: (id: string) => boolean;
   onToggleSave: (id: string) => void;
   onOpenRestaurant: (restaurant: Restaurant) => void;
   onClose: () => void;
+  onRecordSpin: () => void;
 }) {
   const [list] = useState(candidates);
   const [rotation, setRotation] = useState(0);
@@ -43,6 +45,7 @@ function SpinRound({
 
   function spin() {
     if (spinningRef.current || empty) return;
+    onRecordSpin();
     const index = Math.floor(Math.random() * list.length);
     pendingIndex.current = index;
     const reduced =
@@ -206,6 +209,7 @@ export function SpinDialog({
   onToggleSave,
   onOpenRestaurant,
   spinId,
+  onRecordSpin,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -214,6 +218,7 @@ export function SpinDialog({
   onToggleSave: (id: string) => void;
   onOpenRestaurant: (restaurant: Restaurant) => void;
   spinId: number;
+  onRecordSpin: () => void;
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -234,6 +239,7 @@ export function SpinDialog({
             onToggleSave={onToggleSave}
             onOpenRestaurant={onOpenRestaurant}
             onClose={() => onOpenChange(false)}
+            onRecordSpin={onRecordSpin}
           />
         ) : null}
       </DialogContent>

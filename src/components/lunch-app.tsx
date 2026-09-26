@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Bookmark, Dices, Search, SlidersHorizontal, X } from "lucide-react";
 
 import { FeedbackDialog } from "@/components/feedback-dialog";
@@ -28,6 +28,8 @@ import {
   restaurantDistance,
   type Filters,
 } from "@/lib/filter-restaurants";
+import { sendUsage } from "@/lib/track-usage";
+import { describePlace, finalFromFilters, usedFromFilters } from "@/lib/usage";
 import { cn } from "@/lib/utils";
 
 function Chip({
@@ -80,6 +82,43 @@ export function LunchApp() {
     spinSource === "shortlist" && savedRestaurants.length > 0
       ? savedRestaurants
       : filtered;
+
+  const filtersRef = useRef(filters);
+  const resultCountRef = useRef(filtered.length);
+  filtersRef.current = filters;
+  resultCountRef.current = filtered.length;
+
+  useEffect(() => {
+    sendUsage({ type: "visit" });
+    const flush = () => {
+      sendUsage({
+        type: "filters",
+        used: usedFromFilters(filtersRef.current),
+        final: finalFromFilters(filtersRef.current),
+        resultCount: resultCountRef.current,
+      });
+    };
+    window.addEventListener("pagehide", flush);
+    return () => window.removeEventListener("pagehide", flush);
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      sendUsage({
+        type: "filters",
+        used: usedFromFilters(filters),
+        final: finalFromFilters(filters),
+        resultCount: filtered.length,
+      });
+    }, 700);
+    return () => window.clearTimeout(timer);
+  }, [filters, filtered.length]);
+
+  useEffect(() => {
+    const place = describePlace(location.source, location.origin);
+    if (!place) return;
+    sendUsage({ type: "place", place });
+  }, [location.source, location.origin]);
 
   const featured = todaysPick(restaurants, daySeedFromDate());
   const activeFilterCount = [
@@ -437,6 +476,7 @@ export function LunchApp() {
         onToggleSave={shortlist.toggle}
         onOpenRestaurant={setDetail}
         spinId={spinId}
+        onRecordSpin={() => sendUsage({ type: "spin", source: spinSource })}
       />
 
       <ShortlistSheet
